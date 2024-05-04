@@ -46,30 +46,24 @@ def ejemplo_obtener_dato():
 def obtener_usuario(username):
     ref = db.reference(f'/users/{username}')
     testPerson = Person(ref.get('/'))
-    return f"User: {testPerson.json}"
+    return testPerson.json
 
 @app.route('/<name>', methods=['GET'])
 def obtener_usuario_from_nombre(name):
     ref = db.reference('/users/')
     snapshot = ref.order_by_child('name').equal_to("Anderson Hudson").get()
     for key in snapshot:
-        print(key)
+        pass
 
     ref = db.reference(f'/users/{key}')
     testPerson = Person(ref.get('/'))
-    return f"User: {testPerson.json}"
+    return testPerson.json
 
 @app.route('/users/<username>/travel', methods=['GET'])
 def conseguir_ultimo_viaje(username):
     ref = db.reference(f'/users/{username}')
     person = Person(ref.get('/'))
-    return f"Travel: {person.getTravel()}"
-
-@app.route('/users/<username>/travel', methods=['GET'])
-def conseguir_todos_los_viajes(username):
-    ref = db.reference(f'/users/{username}')
-    person = Person(ref.get('/'))
-    return person.getTravel()
+    return person.getTravelList()
 
 @app.route('/users/<username>/travel', methods=['GET'])
 def conseguir_todos_los_viajes(username):
