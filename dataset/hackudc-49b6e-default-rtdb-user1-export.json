@@ -1,0 +1,11 @@
+{
+  "name": "Anderson Hudson",
+  "travels": {
+    "travel1": {
+      "arrival_city": "Paris",
+      "departure_city": "Barcelona",
+      "departure_date": "08/11/2024",
+      "return_date": "13/11/2024"
+    }
+  }
+}
