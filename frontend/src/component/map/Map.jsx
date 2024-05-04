@@ -34,8 +34,8 @@ const Map = ({ ciudad }) => {
                     }
                     const data = await response.json();
                     console.log(data["arrival_city"])
+                    //ciudad mockeada
                     ciudad = "Barcelona"//data["arrival_city"]
-                    //setLoc(data);
                 } catch (error) {
                     console.error('Error al obtener los datos:', error);
                 }  
@@ -47,14 +47,6 @@ const Map = ({ ciudad }) => {
                 }
                 const data = await response.json();
                 setLoc(data);
-                if (loc.length != 0 && loc[0].localizacion !== undefined) {//NON ENTRA NUNCA POR AQUI
-                    console.log([loc[0].localizacion.cords.latitude, loc[0].localizacion.cords.longitude])
-                    setPosition([loc[0].localizacion.cords.latitude, loc[0].localizacion.cords.longitude]);
-                }
-                else {
-                    console.log([0, 0])
-                    setPosition([0, 0]);
-                }
             } catch (error) {
                 console.error('Error al obtener los datos:', error);
             }
@@ -62,16 +54,13 @@ const Map = ({ ciudad }) => {
         fetchData();
     }, [ciudad]);
 
-    // useEffect(() => {
-    //     if (loc.length != 0 && loc[0].localizacion !== undefined) {
-    //         console.log([loc[0].localizacion.cords.latitude, loc[0].localizacion.cords.longitude])
-    //         setPosition([loc[0].localizacion.cords.latitude, loc[0].localizacion.cords.longitude]);
-    //     }
-    //     else {
-    //         console.log([0, 0])
-    //         setPosition([0, 0]);
-    //     }
-    // }, [loc])
+    useEffect(() => {
+        console.log(loc)
+        if (loc.length != 0 && loc[0].cords !== undefined) {
+            console.log([loc[0].cords.latitude, loc[0].cords.longitude])
+            setPosition([loc[0].cords.latitude, loc[0].cords.longitude]);
+        }
+    }, [loc, ciudad])
 
 
     const example = (<div className="w-full h-96 mb-9">
@@ -83,8 +72,6 @@ const Map = ({ ciudad }) => {
             />
                 {loc.map((localizacion, index) => 
                         <Marker position={[localizacion.cords.latitude, localizacion.cords.longitude]} icon={markerIcon}>
-                            
-                            
                             <Popup>
                                 {localizacion.nombre}
                             </Popup>
