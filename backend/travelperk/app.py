@@ -68,8 +68,9 @@ def eventos():
     for evento in eventos:
         nombre = evento.get("name", "")
         url_evento = evento.get("url", "")
-        imagen = evento.get("_embedded", {}).get("images", [{}])[0].get("url", "")
-        eventos_procesados.append({"nombre": nombre, "url": url_evento, "image": imagen})
+        imagen = evento.get("images", [{}])[0].get("url", "")
+        print(imagen)
+        eventos_procesados.append({"name": nombre, "url": url_evento, "image": imagen})
     
     return jsonify(eventos_procesados)
 
