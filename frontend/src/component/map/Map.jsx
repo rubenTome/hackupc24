@@ -60,7 +60,7 @@ const Map = ({ ciudad }) => {
             console.log([loc[0].cords.latitude, loc[0].cords.longitude])
             setPosition([loc[0].cords.latitude, loc[0].cords.longitude]);
         }
-    }, [loc])
+    }, [loc, ciudad])
 
 
     const example = (<div className="w-full h-96 mb-9">
