@@ -5,16 +5,7 @@ import firebase_admin
 from firebase_admin import db
 import csv
 import json
-
-
-databaseURL = 'https://hackudc-49b6e-default-rtdb.europe-west1.firebasedatabase.app/'
-api_key = 'A4na1M8Qx37B6GOjdnFeHH2lYa9JI4UG';
-
-cred_obj = firebase_admin.credentials.Certificate('./../../key.json')
-default_app = firebase_admin.initialize_app(cred_obj, {
-	'databaseURL':databaseURL
-	})
-
+from models.person import Person
 
 
 def create_app():
@@ -36,20 +27,35 @@ def connect_to_database():
 database = connect_to_database()
 
 @app.route('/', methods=['GET'])
-def obtener_dato():
+def ejemplo_obtener_dato():
     # As an admin, the app has access to read and write all data, regradless of Security Rules
-    ref = db.reference('/User1')
-    print(ref.get('/'))
-    return 'Hello, World!'
+    ref = db.reference('users/user1')
+    testPerson = Person(ref.get('/'))
+    print(testPerson)
+    return f"User: {testPerson.json}"
 
 @app.route('/users/<username>', methods=['GET'])
 def obtener_usuario(username):
-    ref = db.reference('/User1')
-    print(ref.get('/'))
-    return f"User: {username}"
-    ref = db.reference('/User1')
-    print(ref.get('/'))
-    return
+    ref = db.reference(f'/users/{username}')
+    testPerson = Person(ref.get('/'))
+    return f"User: {testPerson.json}"
+
+@app.route('/<name>', methods=['GET'])
+def obtener_usuario_from_nombre(name):
+    ref = db.reference('/users/')
+    snapshot = ref.order_by_child('name').equal_to("Anderson Hudson").get()
+    for key in snapshot:
+        print(key)
+
+    ref = db.reference(f'/users/{key}')
+    testPerson = Person(ref.get('/'))
+    return f"User: {testPerson.json}"
+
+@app.route('/users/<username>/travel', methods=['GET'])
+def conseguir_ultimo_viaje(username):
+    ref = db.reference(f'/users/{username}')
+    person = Person(ref.get('/'))
+    return f"Travel: {person.getTravel()}"
     
 @app.route('/evento', methods=['GET'])
 def eventos():
