@@ -19,7 +19,7 @@ const Map = ({ ciudad }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (ciudad === null) {
+            if (ciudad === null || ciudad===undefined ) {
                 return;
             }
             try {
@@ -45,9 +45,10 @@ const Map = ({ ciudad }) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            
                 {loc.map((localizacion, index) => 
                         <Marker position={[localizacion.cords.latitude, localizacion.cords.longitude]} icon={markerIcon}>
+                            
+                            
                             <Popup>
                                 {localizacion.nombre}
                             </Popup>
