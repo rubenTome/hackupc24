@@ -38,3 +38,6 @@ class Person():
     #Cojo el primero, idealmente coges el más cercano
     def getTravel(self):
         return self.travelList[0]
+    
+    def getTravelList(self):
+        return self.travelList

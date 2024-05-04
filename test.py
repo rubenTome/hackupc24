@@ -13,26 +13,32 @@ default_app = firebase_admin.initialize_app(cred_obj, {
 	})
 
 # As an admin, the app has access to read and write all data, regradless of Security Rules
-ref = db.reference('users/user1')
-print(ref.get('/'))
+# ref = db.reference('users/user1')
+# print(ref.get('/'))
 
 def convert_date_to_iso(date_str):
     # Parsear la fecha original
     date_obj = datetime.strptime(date_str, "%d/%m/%Y")
     # Formatear al formato ISO 8601
-    iso_date = date_obj.strftime("%Y-%m-%d")
-    return iso_date
+    #iso_date = date_obj.strftime("%Y-%m-%d")
+    return date_obj.timestamp()
 
 # ref = db.reference('users')
 # snapshot = ref.order_by_child('departure_date').limit_to_first(10).get()
 # for key, val in snapshot.items():
 #     print('{0} was {1} meters tall'.format(key, val))
-# print(ref.get('/'))
 
 ref = db.reference('users')
-snapshot = ref.order_by_child('name').equal_to("Anderson Hudson").get()
-for key in snapshot:
-    print(key)
+snapshot = ref.order_by_child('arrival_city').equal_to("Paris").get()
+for key, val in snapshot.items():
+    print('{0} was {1} meters tall'.format(key, val))
+
+# print(ref.get('/'))
+
+# ref = db.reference('users')
+# snapshot = ref.order_by_child('name').equal_to("Anderson Hudson").get()
+# for key in snapshot:
+#     print(key)
 
 # with open('./dataset/hackupc-travelperk-dataset.csv', newline='') as csvfile:
 #     reader = csv.reader(csvfile, quotechar='|')
