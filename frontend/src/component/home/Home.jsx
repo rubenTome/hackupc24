@@ -1,6 +1,8 @@
 import React from "react";
 import logo from "../../assets/img/Logo_TravelPerk.png";
 import Trip from "../trip";
+import Social from "../social";
+
 
 
 const Home = () => {
@@ -15,11 +17,15 @@ const Home = () => {
                     <button className="text-blue-500 rounded-r-lg border  bg-white hover:bg-blue-500 hover:text-white focus:outline-none px-4 py-2">Social</button>
                 </div>
 
-                <div></div>
+                <div>
+
+                </div>
             </nav>
 
             <div className="flex justify-center">
-                <Trip />
+                
+                {/* <Trip /> */}
+                <Social />
             </div>
         </main>
 
