@@ -117,24 +117,3 @@ def buscar_lugares_interes_endpoint():
     
     return jsonify(lugares_procesados)
 
-@app.route('/buscar_vuelos', methods=['GET'])
-def buscar_vuelos():
-    # Obtener parámetros de la solicitud
-    origen = request.args.get('origen')
-    destino = request.args.get('destino')
-    fecha_salida = request.args.get('fecha_salida')
-    fecha_retorno = request.args.get('fecha_retorno')
-    api_key = 'TU_API_KEY'  # Reemplaza 'TU_API_KEY' con tu clave de API de Skyscanner
-    
-    # Construir la URL de la solicitud
-    url = f'https://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/US/USD/en-US/{origen}-sky/{destino}-sky/{fecha_salida}/{fecha_retorno}?apikey={api_key}'
-
-    # Realizar la solicitud GET
-    respuesta = requests.get(url)
-    
-    # Verificar el estado de la respuesta
-    if respuesta.status_code == 200:
-        datos_vuelos = respuesta.json()
-        return jsonify(datos_vuelos)
-    else:
-        return jsonify({"error": "Hubo un problema al buscar vuelos"}), 500
