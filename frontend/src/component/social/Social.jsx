@@ -1,6 +1,24 @@
 import React from "react";
 import Card from "../card/Card";
+import { useEffect } from "react";
 const Social = () => {
+
+    useEffect(() => {
+        const fetchedData = async () => {
+            try {
+              const response = await fetch('http://127.0.0.1:5000/evento?ciudad=London');
+              if (!response.ok) {
+                throw new Error('Error al obtener los datos');
+              }
+              const data = await response.json();
+              setDatos(data);
+            } catch (error) {
+              console.error('Error al obtener los datos:', error);
+            }
+          };
+          fetchData();
+        }, []);
+
     return(
         <div className="grid grid-cols-4 grid-rows-4 gap-4">
             <div className="flex flex-col col-start-1 col-end-1 row-start-1 row-end-4">
@@ -24,8 +42,9 @@ const Social = () => {
             <div className="col-start-2 col-end-5 row-start-3 row-end-5">
                 <div className="mt-4">
                     <div id="expositorEventos" className="grid grid-cols-2 gap-4">
+                        <Card name="name" image="image" url="url"/>
                         <Card />
-                        <Card />
+                        {response}
                     </div>
                 </div>
             </div>
