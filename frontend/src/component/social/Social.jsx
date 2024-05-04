@@ -31,9 +31,12 @@ const Social = () => {
                 </div>
             </div>
 
-            <div className="col-start-2 col-end-5 row-start-3 w-100 h-100">
-                <Map />
+            <div className="col-start-2 col-end-5 row-start-5 row-end-8">
+                <div className="rounded-md p-3 rounded-lg overflow-hidden shadow-lg bg-white">
+                    <Map />
+                </div>
             </div>
+
 
         </div>
 

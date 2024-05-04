@@ -31,7 +31,9 @@ const Home = () => {
                     </button>
                 </div>
 
-                <div></div>
+                <div className='mx-10'>
+                    <h2 className='text-blue-500 text-xl font-bold'>Usuario</h2>
+                </div>
             </nav>
 
             <div className="flex justify-center">                
