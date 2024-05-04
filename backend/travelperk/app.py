@@ -6,6 +6,8 @@ import firebase_admin
 from firebase_admin import db
 import csv
 import json
+import pandas as pd
+import numpy as np
 
 
 databaseURL = 'https://hackudc-49b6e-default-rtdb.europe-west1.firebasedatabase.app/'
@@ -148,3 +150,47 @@ def añadir_nuevo_viaje():
         status=200,
         mimetype='application/json'
     )
+
+@app.route('/users/<username>/match',methods=['GET'])
+def coger_matched_users(username):
+    ref = db.reference(f'/users/{username}')
+    person = Person(ref.get('/'))
+    travel = person.getTravel()
+    print(travel)
+    return "perro"
+
+
+def matchUsers(df_sorted, arrival_city, departure_date, return_date):
+    ref = db.reference('/users')
+    data = ref.get()
+    #print(data)
+
+    concatenated_df = pd.DataFrame()
+
+    for user in data:
+        # print(user)
+        # print(data[user])
+        df = pd.json_normalize(data[user])
+        concatenated_df = pd.concat([concatenated_df, df], axis=0, ignore_index=True)
+
+
+    concatenated_df.columns = ['name','arrival_city','departure_city','departure_date','return_date']
+
+    df_sorted = concatenated_df.sort_values(by='departure_date', ascending=True)
+
+
+    print(arrival_city)
+
+    df_sorted = df_sorted[df_sorted["arrival_city"]==arrival_city]
+
+    print(df_sorted[df_sorted['return_date']>return_date])
+
+    # Condiciones para la superposición
+    condition1 = (df_sorted['departure_date'] >= departure_date) & (df_sorted['departure_date'] <= return_date)
+    condition2 = (df_sorted['return_date'] >= departure_date) & (df_sorted['return_date'] <= return_date)
+    condition3 = (df_sorted['departure_date'] <= departure_date) & (df_sorted['return_date'] >= return_date)
+
+    # Filtrar filas donde haya superposición con el intervalo objetivo
+    filtered_df = df_sorted[condition1 | condition2 | condition3]
+
+    return filtered_df['name'].to_list()
