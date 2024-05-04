@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import logo from "../../assets/img/Logo_TravelPerk.png";
 import Trip from "../trip";
 import Social from "../social";
+import Login from '../Login';
 
 
 const Home = () => {
     const [activePage, setActivePage] = useState('Trip'); // Inicializa con el nombre de la página
+    const [user, setUser] = useState("");
     
     const handleSetActivePage = (pageName) => {
         setActivePage(pageName);
@@ -16,7 +18,8 @@ const Home = () => {
             <nav className="border-b border-black-500 shadow-md p-4 flex items-center justify-between mb-10">
                 <img src={logo} alt="Logo" className="w-48"/>
                 
-                <div className="flex">
+                {user === "" ? <span /> :
+                    (<div className="flex">
                     <button 
                         onClick={() => handleSetActivePage('Trip')} 
                         className={`rounded-l-lg border ${activePage === 'Trip' ? 'bg-blue-500 text-white' : 'text-blue-500  bg-white hover:bg-blue-500 hover:text-white'} focus:outline-none px-4 py-2`}
@@ -29,16 +32,24 @@ const Home = () => {
                     >
                         Social
                     </button>
-                </div>
+                </div>)
+                }
+                
 
                 <div className='mx-10'>
-                    <h2 className='text-blue-500 text-xl font-bold'>Usuario</h2>
+                    {user === "" ? <span/>: 
+                    <h2 className='text-blue-500 text-xl font-bold'>{user}</h2>
+
+                    }
                 </div>
             </nav>
-
-            <div className="flex justify-center">                
-                <div>{activePage === 'Trip' ? <Trip /> : <Social />}</div>
+            <div className="flex justify-center">
+                {user === "" ? <Login setUser={setUser} /> :
+                    <div>{activePage === 'Trip' ? <Trip /> : <Social />}</div>
+                }
             </div>
+
+            
         </main>
     );
 };

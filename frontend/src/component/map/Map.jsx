@@ -40,7 +40,7 @@ const Map = ({ ciudad }) => {
 
     const example = (<div className="w-full h-96 mb-9">
         <h1 className="text-blue-500 text-2xl font-bold">Mapa</h1>
-        {console.log([loc[0].cords.latitude, loc[0].cords.longitude])}
+        {/* {console.log([loc[0].cords.latitude, loc[0].cords.longitude])} */}
         <MapContainer center={position} zoom={13} scrollWheelZoom={false} className="w-full h-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

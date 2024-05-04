@@ -114,7 +114,7 @@ const Social = () => {
             </div>
 
             <div className="col-span-full flex justify-center items-center ">
-                <div className="rounded-md p-3 rounded-lg overflow-hidden shadow-lg bg-white w-3/4">
+                <div className="rounded-md p-3 overflow-hidden shadow-lg bg-white w-3/4">
                     <Map ciudad={ciudad}/>
                 </div>
             </div>
