@@ -16,11 +16,29 @@ const markerIcon = new L.Icon({
 const Map = ({ ciudad }) => {
 
     const [loc, setLoc] = useState([]);
+    const [position, setPosition] = useState([0, 0]);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (ciudad === null || ciudad===undefined ) {
+            if (ciudad === undefined ) {
                 return;
+            }
+            if (ciudad === null) {
+                try {
+                    //usuario mockeado
+                    const usuario = "user1"
+                    const response = await fetch("http://127.0.0.1:5000/users/"+ usuario +"/travel");
+                    if (!response.ok) {
+                        console.log(response)
+                        throw new Error('Error al obtener los datos');
+                    }
+                    const data = await response.json();
+                    console.log(data["arrival_city"])
+                    ciudad = "Barcelona"//data["arrival_city"]
+                    //setLoc(data);
+                } catch (error) {
+                    console.error('Error al obtener los datos:', error);
+                }  
             }
             try {
                 const response = await fetch("http://127.0.0.1:5000/lugares?ciudad=" + ciudad);
@@ -29,6 +47,14 @@ const Map = ({ ciudad }) => {
                 }
                 const data = await response.json();
                 setLoc(data);
+                if (loc.length != 0 && loc[0].localizacion !== undefined) {//NON ENTRA NUNCA POR AQUI
+                    console.log([loc[0].localizacion.cords.latitude, loc[0].localizacion.cords.longitude])
+                    setPosition([loc[0].localizacion.cords.latitude, loc[0].localizacion.cords.longitude]);
+                }
+                else {
+                    console.log([0, 0])
+                    setPosition([0, 0]);
+                }
             } catch (error) {
                 console.error('Error al obtener los datos:', error);
             }
@@ -36,7 +62,17 @@ const Map = ({ ciudad }) => {
         fetchData();
     }, [ciudad]);
 
-    const position = [51.505, -0.09];
+    // useEffect(() => {
+    //     if (loc.length != 0 && loc[0].localizacion !== undefined) {
+    //         console.log([loc[0].localizacion.cords.latitude, loc[0].localizacion.cords.longitude])
+    //         setPosition([loc[0].localizacion.cords.latitude, loc[0].localizacion.cords.longitude]);
+    //     }
+    //     else {
+    //         console.log([0, 0])
+    //         setPosition([0, 0]);
+    //     }
+    // }, [loc])
+
 
     const example = (<div className="w-full h-96 mb-9">
         <h1 className="text-blue-500 text-2xl font-bold">Mapa</h1>

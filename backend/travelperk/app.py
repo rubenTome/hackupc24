@@ -63,7 +63,7 @@ def obtener_usuario_from_nombre(name):
 def conseguir_ultimo_viaje(username):
     ref = db.reference(f'/users/{username}')
     person = Person(ref.get('/'))
-    return f"Travel: {person.getTravel()}"
+    return person.getTravel()
     
 @app.route('/evento', methods=['GET'])
 def eventos():

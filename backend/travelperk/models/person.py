@@ -2,28 +2,28 @@ from datetime import datetime
 
 class Person():
     def __init__(self, object):
-        print(object)
+        #print(object)
         self.id = object[1]
         self.json = object[0]
 
         travelList = []
         index = 1
-        for travelKey in self.json['travels']:
-            travel = self.json['travels'][travelKey]
+        # for travelKey in self.json['travels']:
+        #     travel = self.json['travels'][travelKey]
 
-            # arrivalCity = travel['arrival_city']
-            # departureCity = travel['departure_city']
-            # departureDate = travel['departure_date']
-            # returnDate = travel['return_date']
+        #     # arrivalCity = travel['arrival_city']
+        #     # departureCity = travel['departure_city']
+        #     # departureDate = travel['departure_date']
+        #     # returnDate = travel['return_date']
 
-            travelName = f'travel{index}'
+        #     travelName = f'travel{index}'
 
-            travelList.append((travelName, travel))
+        #     travelList.append((travelName, travel))
 
-            index+=1
+        #     index+=1
 
         self.name = self.json['name']
-        self.travelList = travelList
+        self.travelList = self.json['travels']
 
     def convert_date_to_iso(self, date_str):
         # Parsear la fecha original
@@ -37,4 +37,4 @@ class Person():
 
     #Cojo el primero, idealmente coges el más cercano
     def getTravel(self):
-        return self.travelList[0]
+        return self.travelList[list(self.travelList.keys())[0]]
