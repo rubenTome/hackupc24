@@ -11,11 +11,6 @@ databaseURL = 'https://hackudc-49b6e-default-rtdb.europe-west1.firebasedatabase.
 api_key_evento = 'A4na1M8Qx37B6GOjdnFeHH2lYa9JI4UG';
 api_key_location = 'fsq3GEAn2lFtnrxrPXA2sIeYEXaja2GOZbhPQz2uPIJZ1ck='
 
-cred_obj = firebase_admin.credentials.Certificate('./../../key.json')
-default_app = firebase_admin.initialize_app(cred_obj, {
-	'databaseURL':databaseURL
-	})
-
 
 
 def create_app():
@@ -29,7 +24,7 @@ app = create_app()
 def connect_to_database():
     databaseURL = 'https://hackudc-49b6e-default-rtdb.europe-west1.firebasedatabase.app/'
 
-    cred_obj = firebase_admin.credentials.Certificate('./key.json')
+    cred_obj = firebase_admin.credentials.Certificate('./../../key.json')
     default_app = firebase_admin.initialize_app(cred_obj, {
         'databaseURL':databaseURL
         })
