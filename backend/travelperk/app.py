@@ -11,3 +11,4 @@ app = create_app()
 @app.route('/', methods=['GET'])
 def obtener_dato():
     return 'Hello, World!'
+    
