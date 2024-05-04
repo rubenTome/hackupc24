@@ -7,13 +7,15 @@ import { element } from "three/examples/jsm/nodes/Nodes.js";
 const Social = () => {
 
     const [eventos, setEventos] = useState([]);
-    const [ciudad, setCiudad] = useState('');
+    const [ciudad, setCiudad] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            
-            if (ciudad === '') {
+        const fetchData = async () => {  
+            if (ciudad === null) {
                 return;
+            }
+            if (ciudad === "") {//VIAJE MAS RECIENTE
+                return
             }
             try {
                 const response = await fetch("http://127.0.0.1:5000/evento?ciudad=" + ciudad);
