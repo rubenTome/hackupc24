@@ -2,7 +2,6 @@ import React from "react";
 import Card from "../card/Card";
 import { useEffect, useState, response } from "react";
 import Map from "../map";
-import { element } from "three/examples/jsm/nodes/Nodes.js";
 
 const Social = () => {
 
@@ -18,7 +17,10 @@ const Social = () => {
                 return
             }
             try {
+                console.log(ciudad)
                 const response = await fetch("http://127.0.0.1:5000/evento?ciudad=" + ciudad);
+                console.log(response)
+
                 if (!response.ok) {
                     throw new Error('Error al obtener los datos');
                 }
@@ -48,17 +50,11 @@ const Social = () => {
         setCurrentPage(numeroPagina);
     };
 
-    const clickFun = () => {
-        var element = document.getElementById("botonBusqueda")
-        if (element != null) {
-            element.addEventListener("click", function(event){
-                event.preventDefault()
-                var input = document.getElementById("buscar")
-                if (input != null) {
-                    console.log(input.value)
-                    setCiudad(input.value)
-                }
-            });
+    const handleClick = (event) => {
+        event.preventDefault();
+        const input = document.getElementById('buscar');
+        if (input) {
+            setCiudad(input.value);
         }
     }
 
@@ -78,7 +74,7 @@ const Social = () => {
                 <div className="flex justify-center items-center">
                     <label htmlFor="buscar" className="block font-medium text-gray-700 mx-2">Buscar:</label>
                     <input type="text" name="buscar" id="buscar" className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
-                    <button onClick={clickFun} id="botonBusqueda" className="bg-blue-500 text-white font-bold py-2 px-4 rounded mx-2 hover:bg-blue-700">Buscar</button>
+                    <button onClick={handleClick} id="botonBusqueda" className="bg-blue-500 text-white font-bold py-2 px-4 rounded mx-2 hover:bg-blue-700">Buscar</button>
                 </div>
             </div>
 
@@ -117,7 +113,7 @@ const Social = () => {
 
             <div className="col-span-full flex justify-center items-center ">
                 <div className="rounded-md p-3 rounded-lg overflow-hidden shadow-lg bg-white w-3/4">
-                    <Map />
+                    <Map locations={ciudad}/>
                 </div>
             </div>
         </div>
