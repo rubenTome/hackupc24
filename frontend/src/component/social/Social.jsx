@@ -23,6 +23,22 @@ const Social = () => {
         fetchData();
     }, []);
 
+    // Estado para el número de página actual
+    const [currentPage, setCurrentPage] = useState(1);
+    // Cantidad de eventos por página
+    const eventosPorPagina = 2;
+
+    // Índices del primer y último evento en la página actual
+    const indiceUltimoEvento = currentPage * eventosPorPagina;
+    const indicePrimerEvento = indiceUltimoEvento - eventosPorPagina;
+    // Eventos para la página actual
+    const eventosActuales = eventos.slice(indicePrimerEvento, indiceUltimoEvento);
+
+    // Función para cambiar de página
+    const cambiarPagina = (numeroPagina) => {
+        setCurrentPage(numeroPagina);
+    };
+
 
     return(
         <div className="grid grid-cols-4 grid-rows-4 gap-4">
@@ -47,18 +63,34 @@ const Social = () => {
             <div className="col-start-2 col-end-5 row-start-3 row-end-5">
                 <div className="mt-4">
                     <div id="expositorEventos" className="grid grid-cols-2 gap-4">
-                        {eventos.map((evento, index) => (
+                        {eventosActuales.map((evento, index) => (
                             <Card
                             key={index}
                             name={evento.name}
                             image={evento.image}
                             url={evento.url}
-                        />
+                            />
                         ))}
-                        
+                        </div>
+                        {/* Controles de paginación */}
+                        <div className="mt-4">
+                        <button
+                            onClick={() => cambiarPagina(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="mr-2 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            onClick={() => cambiarPagina(currentPage + 1)}
+                            disabled={indiceUltimoEvento >= eventos.length}
+                            className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+                        >
+                            Siguiente
+                        </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
             <div className="col-start-2 col-end-5 row-start-5 row-end-8">
                
