@@ -1,6 +1,4 @@
 import React from "react";
-import logo from "../../assets/img/Logo_TravelPerk.png";
-
 
 const Trip = () => {
     
