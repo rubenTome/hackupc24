@@ -1,24 +1,28 @@
 import React from "react";
 import Card from "../card/Card";
-import { useEffect } from "react";
+import { useEffect, useState, response } from "react";
 import Map from "../map";
+
 const Social = () => {
 
+    const [eventos, setEventos] = useState([]);
+
     useEffect(() => {
-        const fetchedData = async () => {
+        const fetchData = async () => {
             try {
-              const response = await fetch('http://127.0.0.1:5000/evento?ciudad=London');
-              if (!response.ok) {
-                throw new Error('Error al obtener los datos');
-              }
-              const data = await response.json();
-              setDatos(data);
+                const response = await fetch('http://127.0.0.1:5000/evento?ciudad=London');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los datos');
+                }
+                const data = await response.json();
+                setEventos(data);
             } catch (error) {
-              console.error('Error al obtener los datos:', error);
+                console.error('Error al obtener los datos:', error);
             }
-          };
-          fetchData();
-        }, []);
+        };
+        fetchData();
+    }, []);
+
 
     return(
         <div className="grid grid-cols-4 grid-rows-4 gap-4">
@@ -43,17 +47,22 @@ const Social = () => {
             <div className="col-start-2 col-end-5 row-start-3 row-end-5">
                 <div className="mt-4">
                     <div id="expositorEventos" className="grid grid-cols-2 gap-4">
-                        <Card name="name" image="image" url="url"/>
-                        <Card />
-                        {response}
+                        {eventos.map((evento, index) => (
+                            <Card
+                            key={index}
+                            name={evento.name}
+                            image={evento.image}
+                            url={evento.url}
+                        />
+                        ))}
+                        
                     </div>
                 </div>
             </div>
 
             <div className="col-start-2 col-end-5 row-start-5 row-end-8">
-                <div className="rounded-md p-3 rounded-lg overflow-hidden shadow-lg bg-white">
-                    <Map />
-                </div>
+               
+
             </div>
 
 

@@ -1,5 +1,6 @@
 import flask
 from flask import request, jsonify
+from flask_cors import CORS
 import requests
 import firebase_admin
 from firebase_admin import db
@@ -16,8 +17,8 @@ api_key_location = 'fsq3GEAn2lFtnrxrPXA2sIeYEXaja2GOZbhPQz2uPIJZ1ck='
 def create_app():
 
     fapp = flask.Flask(__name__)
-
-    return fapp
+    CORS(fapp)
+    return fapp 
 
 app = create_app()
 
