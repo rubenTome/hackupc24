@@ -2,26 +2,33 @@ import React from "react";
 import Card from "../card/Card";
 import { useEffect, useState, response } from "react";
 import Map from "../map";
+import { element } from "three/examples/jsm/nodes/Nodes.js";
 
 const Social = () => {
 
     const [eventos, setEventos] = useState([]);
+    const [ciudad, setCiudad] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
+            
+            if (ciudad === '') {
+                return;
+            }
             try {
-                const response = await fetch('http://127.0.0.1:5000/evento?ciudad=London');
+                const response = await fetch("http://127.0.0.1:5000/evento?ciudad=" + ciudad);
                 if (!response.ok) {
                     throw new Error('Error al obtener los datos');
                 }
                 const data = await response.json();
                 setEventos(data);
+                console.log(data)
             } catch (error) {
                 console.error('Error al obtener los datos:', error);
             }
         };
         fetchData();
-    }, []);
+    }, [ciudad]);
 
     // Estado para el número de página actual
     const [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +46,19 @@ const Social = () => {
         setCurrentPage(numeroPagina);
     };
 
+    const clickFun = () => {
+        var element = document.getElementById("botonBusqueda")
+        if (element != null) {
+            element.addEventListener("click", function(event){
+                event.preventDefault()
+                var input = document.getElementById("buscar")
+                if (input != null) {
+                    console.log(input.value)
+                    setCiudad(input.value)
+                }
+            });
+        }
+    }
 
     return(
         <div className="grid grid-cols-4 gap-4">
@@ -55,8 +75,8 @@ const Social = () => {
             <div className="col-span-full">
                 <div className="flex justify-center items-center">
                     <label htmlFor="buscar" className="block font-medium text-gray-700 mx-2">Buscar:</label>
-                    <input type="search" name="buscar" id="buscar" className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
-                    <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded mx-2 hover:bg-blue-700">Buscar</button>
+                    <input type="text" name="buscar" id="buscar" className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+                    <button onClick={clickFun} id="botonBusqueda" className="bg-blue-500 text-white font-bold py-2 px-4 rounded mx-2 hover:bg-blue-700">Buscar</button>
                 </div>
             </div>
 
