@@ -77,7 +77,6 @@ def eventos():
 @app.route('/lugares', methods=['GET'])
 def buscar_lugares_interes_endpoint():
     ciudad = request.args.get('ciudad')
-    ciudad = "London"
     if not ciudad:
         return jsonify({"error": "Debes proporcionar el parámetro 'ciudad'"}), 400
 

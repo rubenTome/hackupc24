@@ -2,6 +2,7 @@ import React from "react";
 import Card from "../card/Card";
 import { useEffect, useState, response } from "react";
 import Map from "../map";
+import Travel from "../travel/Travel";
 
 const Social = () => {
 
@@ -42,12 +43,13 @@ const Social = () => {
 
     return(
         <div className="grid grid-cols-4 gap-4">
-            <div className="col-span-1">
+
+            <div className="col-span-full">
                 <div className="flex flex-col">
                     <h1 className="text-blue-500 text-2xl font-bold mb-4">Amigos:</h1>
-                    <div className="border-2 border-blue-500 rounded p-2 mb-3">
-                        <img src="" alt="foto amigo" className="h-20 w-20" />
-                        <p className="mt-2 ml-2">Pedro</p>
+                    <div className="p-2 mb-3 flex">
+                        <Travel />
+
                     </div>
                 </div>
             </div>
