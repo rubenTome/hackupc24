@@ -1,5 +1,5 @@
 import flask
-from flask import request, jsonify
+from flask import request, jsonify, Response
 from flask_cors import CORS
 import requests
 import firebase_admin
@@ -64,6 +64,18 @@ def conseguir_ultimo_viaje(username):
     ref = db.reference(f'/users/{username}')
     person = Person(ref.get('/'))
     return f"Travel: {person.getTravel()}"
+
+@app.route('/users/<username>/travel', methods=['GET'])
+def conseguir_todos_los_viajes(username):
+    ref = db.reference(f'/users/{username}')
+    person = Person(ref.get('/'))
+    return person.getTravel()
+
+@app.route('/users/<username>/travel', methods=['GET'])
+def conseguir_todos_los_viajes(username):
+    ref = db.reference(f'/users/{username}')
+    person = Person(ref.get('/'))
+    return person.getTravel()
     
 @app.route('/evento', methods=['GET'])
 def eventos():
@@ -117,3 +129,22 @@ def buscar_lugares_interes_endpoint():
     
     return jsonify(lugares_procesados)
 
+@app.route('/users/', methods=['POST'])
+def añadir_nuevo_viaje():
+    data = request.get_json()
+    print(data)
+
+    name = data.get('name', 'Unknown')
+    travelsList = data.get('travels', [])
+
+    response_data = {
+        'mensaje': 'New user created',
+        'nombre': name,
+        'edad': travelsList 
+    }
+
+    return Response(
+        json.dumps(response_data),
+        status=200,
+        mimetype='application/json'
+    )
