@@ -69,7 +69,13 @@ def conseguir_ultimo_viaje(username):
 def conseguir_todos_los_viajes(username):
     ref = db.reference(f'/users/{username}')
     person = Person(ref.get('/'))
-    return f"Travel: {person.getTravel()}"
+    return person.getTravel()
+
+@app.route('/users/<username>/travel', methods=['GET'])
+def conseguir_todos_los_viajes(username):
+    ref = db.reference(f'/users/{username}')
+    person = Person(ref.get('/'))
+    return person.getTravel()
     
 @app.route('/evento', methods=['GET'])
 def eventos():
@@ -100,7 +106,6 @@ def eventos():
 @app.route('/lugares', methods=['GET'])
 def buscar_lugares_interes_endpoint():
     ciudad = request.args.get('ciudad')
-    ciudad = "London"
     if not ciudad:
         return jsonify({"error": "Debes proporcionar el parámetro 'ciudad'"}), 400
 
