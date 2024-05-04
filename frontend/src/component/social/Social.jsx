@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "../card/Card";
+import Map from "../map";
 const Social = () => {
     return(
         <div className="grid grid-cols-4 grid-rows-4 gap-4">
@@ -29,6 +30,11 @@ const Social = () => {
                     </div>
                 </div>
             </div>
+
+            <div className="col-start-2 col-end-5 row-start-3 w-100 h-100">
+                <Map />
+            </div>
+
         </div>
 
 
