@@ -1,15 +1,32 @@
-import React from "react";
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
+import React, { useEffect, useState } from "react";
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 const Grafica = () => {
+  const [data, setData] = useState([]);
 
-  const data = [
-    { name: 'Group A', value: 400 },
-    { name: 'Group B', value: 300 },
-    { name: 'Group C', value: 300 },
-    { name: 'Group D', value: 200 },
-  ];
+  useEffect(() => {
+      try {
+          const fetchData = async () => {
+              const response = await fetch(`http://127.0.0.1:5000//contenido_graficas/Madrid`);
+              if (!response.ok) {
+                  throw new Error('Error al obtener el contenido de las graficas');
+              }
+              const dataRes = await response.json();
+              const temp = [{name: "cultural", value: parseInt(dataRes["cultural"])},
+              {name: "family", value: parseInt(dataRes["family"])},
+              {name: "leisure", value: parseInt(dataRes["leisure"])}]
 
+              setData(temp);
+
+          };
+          fetchData();
+      } catch (error) {
+          console.error('Error al obtener los datos:', error);
+      }
+  }, []);
+
+  
+  
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
   const RADIAN = Math.PI / 180;
@@ -26,15 +43,15 @@ const Grafica = () => {
   };
 
  
-    return (
-        <PieChart width={500} height={500}>
+  return (
+      <PieChart width={400} height={400}>
           <Pie
             data={data}
             cx="50%"
             cy="50%"
             labelLine={false}
             label={renderCustomizedLabel}
-            outerRadius={80}
+            outerRadius={140}
             fill="#8884d8"
             dataKey="value"
           >
@@ -42,7 +59,7 @@ const Grafica = () => {
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-        </PieChart>
+      </PieChart>
     );
 };
 
