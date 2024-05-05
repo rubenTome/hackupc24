@@ -4,36 +4,51 @@ import { useEffect, useState, response } from "react";
 import Map from "../map";
 import Travel from "../travel/Travel";
 
-const Social = () => {
+const Social = ({user}) => {
 
     const [eventos, setEventos] = useState([]);
     const [ciudad, setCiudad] = useState(null);
+    const [viajes, setViajes] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {  
-            if (ciudad === null) {
-                return;
-            }
-            if (ciudad === "") {//VIAJE MAS RECIENTE
-                return
-            }
-            try {
-                console.log(ciudad)
-                const response = await fetch("http://127.0.0.1:5000/evento?ciudad=" + ciudad);
-                console.log(response)
+        // Verificar si el usuario está autenticado
 
-                if (!response.ok) {
-                    throw new Error('Error al obtener los datos');
+        // Si el usuario está autenticado, realizar las llamadas fetch
+        if (user) {
+            const fetchData = async () => {
+                try {
+                    if (!ciudad) {
+                        const response = await fetch("http://127.0.0.1:5000/users/" + user + "/last_travel");
+                        if (!response.ok) {
+                            throw new Error('Error al obtener la ciudad más reciente');
+                        }
+                        const data = await response.json();
+                        setCiudad(data.arrival_city);
+                    }
+
+                    if (ciudad) {
+                        const response = await fetch("http://127.0.0.1:5000/evento?ciudad=" + ciudad);
+                        if (!response.ok) {
+                            throw new Error('Error al obtener los eventos');
+                        }
+                        const data = await response.json();
+                        setEventos(data);
+                    }
+
+                    const response = await fetch("http://127.0.0.1:5000/users/" + user + "/travels");
+                    if (!response.ok) {
+                        throw new Error('Error al obtener los viajes');
+                    }
+                    const data = await response.json();
+                    setViajes(data);
+                } catch (error) {
+                    console.error('Error al obtener los datos:', error);
                 }
-                const data = await response.json();
-                setEventos(data);
-                console.log(data)
-            } catch (error) {
-                console.error('Error al obtener los datos:', error);
-            }
-        };
-        fetchData();
-    }, [ciudad]);
+            };
+
+            fetchData();
+        }
+    }, [user, ciudad]);
 
     // Estado para el número de página actual
     const [currentPage, setCurrentPage] = useState(1);
@@ -64,9 +79,16 @@ const Social = () => {
 
             <div className="col-span-full">
                 <div className="flex flex-col">
-                    <h1 className="text-blue-500 text-2xl font-bold mb-4">Amigos:</h1>
+                    <h1 className="text-blue-500 text-2xl font-bold mb-4">Viajes:</h1>
                     <div className="p-2 mb-3 flex">
-                        <Travel />
+
+                        {viajes.length > 0 ? ( // Verificar si hay viajes
+                            viajes.map((viaje, index) => (
+                                <Travel key={index} salida={viaje} />
+                            ))
+                        ) : (
+                            <p>No hay viajes disponibles</p> // Mensaje si no hay viajes
+                        )}
 
                     </div>
                 </div>
@@ -115,7 +137,10 @@ const Social = () => {
 
             <div className="col-span-full flex justify-center items-center ">
                 <div className="rounded-md p-3 overflow-hidden shadow-lg bg-white w-3/4">
-                    <Map ciudad={ciudad}/>
+                    <Map ciudad={ciudad} 
+                        setCiudad={setCiudad} 
+                        user={user}
+                    />
                 </div>
             </div>
         </div>

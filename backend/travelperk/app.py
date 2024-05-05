@@ -8,6 +8,7 @@ import csv
 import json
 import pandas as pd
 import numpy as np
+from models.person import Person
 
 
 databaseURL = 'https://hackudc-49b6e-default-rtdb.europe-west1.firebasedatabase.app/'
@@ -15,7 +16,6 @@ api_key_evento = 'A4na1M8Qx37B6GOjdnFeHH2lYa9JI4UG';
 api_key_location = 'fsq3GEAn2lFtnrxrPXA2sIeYEXaja2GOZbhPQz2uPIJZ1ck='
 api_key_vuelos = 'Bearer c1Ceh5osX2do2mAjSO2iRbEwdQBS'
 
-from models.person import Person
 
 
 
@@ -62,14 +62,14 @@ def obtener_usuario_from_nombre(name):
     testPerson = Person(ref.get('/'))
     return testPerson.json
 
-@app.route('/users/<username>/travel', methods=['GET'])
-def conseguir_ultimo_viaje(username):
+@app.route('/users/<username>/travels', methods=['GET'])
+def conseguir_todos_los_viajes(username):
     ref = db.reference(f'/users/{username}')
     person = Person(ref.get('/'))
     return person.getTravelList()
 
-@app.route('/users/<username>/travel', methods=['GET'])
-def conseguir_todos_los_viajes(username):
+@app.route('/users/<username>/last_travel', methods=['GET'])
+def conseguir_ultimo_viaje(username):
     ref = db.reference(f'/users/{username}')
     person = Person(ref.get('/'))
     return person.getTravel()

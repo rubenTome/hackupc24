@@ -13,58 +13,56 @@ const markerIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
-const Map = ({ ciudad }) => {
+const Map = ({ ciudad, user }) => {
 
     const [loc, setLoc] = useState([]);
     const [position, setPosition] = useState([0, 0]);
 
+    // useEffect(() => {
+    //     console.log(loc)
+    //     if (loc.length != 0 && loc[0].cords !== undefined) {
+    //         console.log([loc[0].cords.latitude, loc[0].cords.longitude])
+    //         setPosition([loc[0].cords.latitude, loc[0].cords.longitude]);
+    //     }
+    // }, [loc])
+
+
     useEffect(() => {
         const fetchData = async () => {
-            if (ciudad === undefined ) {
-                return;
-            }
-            if (ciudad === null) {
-                try {
-                    //usuario mockeado
-                    const usuario = "user1"
-                    const response = await fetch("http://127.0.0.1:5000/users/"+ usuario +"/travel");
+            try {
+                if (!ciudad) {
+                    const response = await fetch("http://127.0.0.1:5000/users/" + user + "/last_travel");
                     if (!response.ok) {
-                        console.log(response)
                         throw new Error('Error al obtener los datos');
                     }
                     const data = await response.json();
-                    console.log(data["arrival_city"])
-                    //ciudad mockeada
-                    ciudad = "Barcelona"//data["arrival_city"]
-                } catch (error) {
-                    console.error('Error al obtener los datos:', error);
-                }  
-            }
-            try {
+                    console.log("sachando")
+                    console.log(data);
+                }
+
                 const response = await fetch("http://127.0.0.1:5000/lugares?ciudad=" + ciudad);
                 if (!response.ok) {
                     throw new Error('Error al obtener los datos');
                 }
                 const data = await response.json();
                 setLoc(data);
+                console.log("loc")
+                // console.log(loc[0].cords)
+                // Actualizar posición del mapa después de actualizar loc
+                if (data.length !== 0 && data[0].cords !== undefined) {
+                    setPosition([data[0].cords.latitude, data[0].cords.longitude]);
+                }
             } catch (error) {
                 console.error('Error al obtener los datos:', error);
             }
         };
         fetchData();
-    }, [ciudad]);
+    }, [ciudad, user]);
 
-    useEffect(() => {
-        console.log(loc)
-        if (loc.length != 0 && loc[0].cords !== undefined) {
-            console.log([loc[0].cords.latitude, loc[0].cords.longitude])
-            setPosition([loc[0].cords.latitude, loc[0].cords.longitude]);
-        }
-    }, [loc, ciudad])
 
 
     const example = (<div className="w-full h-96 mb-9">
-        <h1 className="text-blue-500 text-2xl font-bold">Mapa</h1>
+        <h1 className="text-blue-500 text-2xl font-bold">{position}</h1>
         <MapContainer center={position} zoom={13} scrollWheelZoom={false} className="w-full h-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

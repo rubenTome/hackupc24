@@ -55,7 +55,7 @@ const Home = () => {
             <div className="flex justify-center">
                 {user === "" ? <Login setUser={setUser} /> :
                     <div>
-                        {activePage === 'Trip' ? <Trip /> : activePage === 'Social' ? <Social /> : <Information />}
+                        {activePage === 'Trip' ? <Trip /> : activePage === 'Social' ? <Social user={user}/> : <Information />}
                     </div>
                   
                 }
