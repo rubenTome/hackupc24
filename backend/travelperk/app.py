@@ -8,6 +8,9 @@ import csv
 import json
 import pandas as pd
 import numpy as np
+import datetime
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 from models.person import Person
 
 
@@ -170,7 +173,6 @@ def coger_matched_users(username):
     print(matches)
     return matches
 
-
 def matchUsers(arrival_city, departure_date, return_date):
     ref = db.reference('/users')
     data = ref.get()
@@ -185,7 +187,7 @@ def matchUsers(arrival_city, departure_date, return_date):
         concatenated_df = pd.concat([concatenated_df, df], axis=0, ignore_index=True)
 
 
-    concatenated_df.columns = ['name','arrival_city','departure_city','departure_date','return_date']
+    concatenated_df.columns = ['name','arrival_city','departure_city','departure_date','return_date','travel_type']
 
     df_sorted = concatenated_df.sort_values(by='departure_date', ascending=True)
 
@@ -253,4 +255,56 @@ def aeropuertos_importantes():
     except Exception as e:
         # Si se produce una excepción, devolver un mensaje de error con la descripción del error
         return jsonify({"error": f"Hubo un error al procesar la solicitud: {str(e)}"}), 500
+    
+@app.route('/contenido_graficas/<place>', methods=['GET'])
+def get_leisure_graph_data(place):
+    return valuesToPlot(place)
 
+def valuesToPlot(place):
+    ref = db.reference('/users')
+    data = ref.get()
+    #print(data)
+
+    fecha_actual = datetime.now()  # También puedes usar datetime.today()
+
+    # Restar un mes usando relativedelta
+    fecha_menos_un_mes = fecha_actual - relativedelta(months=2)
+
+    # Formatear la fecha como Año-Mes-Día
+    fecha_actual_formateada = fecha_actual.strftime("%Y-%m-%d")
+    fecha_pasada_formateada = fecha_menos_un_mes.strftime("%Y-%m-%d")
+
+    print(fecha_actual_formateada, fecha_pasada_formateada  )
+
+    concatenated_df = pd.DataFrame()
+
+    for user in data:
+        # print(user)
+        # print(data[user])
+        df = pd.json_normalize(data[user])
+        concatenated_df = pd.concat([concatenated_df, df], axis=0, ignore_index=True)
+
+
+    concatenated_df.columns = ['name','arrival_city','departure_city','departure_date','return_date','travel_type']
+
+    df_sorted = concatenated_df.sort_values(by='departure_date', ascending=True)
+
+    df_sorted = df_sorted[df_sorted["arrival_city"]==place]
+
+    condicion_interseccion = (
+        (df_sorted['departure_date'] <= fecha_actual_formateada) & 
+        (df_sorted['return_date'] >= fecha_pasada_formateada)
+    )
+
+    # Filtrar filas que cumplen con esta condición
+    df_filtered = df_sorted[condicion_interseccion]
+
+    travelTypes = df_filtered['travel_type'].unique()
+    uniqueCounts = df_filtered['travel_type'].value_counts().values
+
+    plotValues = {}
+
+    for value1, value2 in zip(travelTypes,uniqueCounts):
+        plotValues[value1] = str(value2)
+
+    return plotValues
