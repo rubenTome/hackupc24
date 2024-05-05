@@ -168,7 +168,6 @@ def coger_matched_users(username):
             ref = db.reference(f'/users/{key}')
             testPerson = Person(ref.get('/'))
             matches[key] = testPerson.json
-            #print({key : testPerson.json})
     
     print(matches)
     return matches
@@ -176,13 +175,10 @@ def coger_matched_users(username):
 def matchUsers(arrival_city, departure_date, return_date):
     ref = db.reference('/users')
     data = ref.get()
-    #print(data)
 
     concatenated_df = pd.DataFrame()
 
     for user in data:
-        # print(user)
-        # print(data[user])
         df = pd.json_normalize(data[user])
         concatenated_df = pd.concat([concatenated_df, df], axis=0, ignore_index=True)
 
@@ -279,8 +275,6 @@ def valuesToPlot(place):
     concatenated_df = pd.DataFrame()
 
     for user in data:
-        # print(user)
-        # print(data[user])
         df = pd.json_normalize(data[user])
         concatenated_df = pd.concat([concatenated_df, df], axis=0, ignore_index=True)
 
