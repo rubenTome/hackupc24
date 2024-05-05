@@ -150,11 +150,27 @@ def coger_matched_users(username):
     ref = db.reference(f'/users/{username}')
     person = Person(ref.get('/'))
     travel = person.getTravel()
-    print(travel)
-    return "perro"
+    print(travel['arrival_city'],travel['departure_date'],travel['return_date'])
+    usersList = matchUsers(arrival_city=travel['arrival_city'], departure_date=travel['departure_date'], return_date=travel['return_date'])
+    
+    matches = {}
+
+    for user in usersList:
+            ref = db.reference('/users/')
+            snapshot = ref.order_by_child('name').equal_to(user).get()
+            for key in snapshot:
+                pass
+
+            ref = db.reference(f'/users/{key}')
+            testPerson = Person(ref.get('/'))
+            matches[key] = testPerson.json
+            #print({key : testPerson.json})
+    
+    print(matches)
+    return matches
 
 
-def matchUsers(df_sorted, arrival_city, departure_date, return_date):
+def matchUsers(arrival_city, departure_date, return_date):
     ref = db.reference('/users')
     data = ref.get()
     #print(data)
@@ -172,12 +188,7 @@ def matchUsers(df_sorted, arrival_city, departure_date, return_date):
 
     df_sorted = concatenated_df.sort_values(by='departure_date', ascending=True)
 
-
-    print(arrival_city)
-
     df_sorted = df_sorted[df_sorted["arrival_city"]==arrival_city]
-
-    print(df_sorted[df_sorted['return_date']>return_date])
 
     # Condiciones para la superposición
     condition1 = (df_sorted['departure_date'] >= departure_date) & (df_sorted['departure_date'] <= return_date)
