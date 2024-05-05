@@ -63,7 +63,9 @@ const Map = ({ ciudad, user }) => {
 
     const example = (<div className="w-full h-96 mb-9">
         <h1 className="text-blue-500 text-2xl font-bold">{position}</h1>
-        <MapContainer center={position} zoom={13} scrollWheelZoom={false} className="w-full h-full">
+        <MapContainer center={position} zoom={13} scrollWheelZoom={false} 
+        className="w-full h-full"
+        ref={position}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

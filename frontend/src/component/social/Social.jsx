@@ -107,8 +107,8 @@ const Social = ({ user }) => {
                     <h1 className="text-blue-500 text-2xl font-bold mb-4">Viajes:</h1>
                     <div className="p-2 mb-3 flex">
                         {viajesArray. length > 0 ? ( // Verificar si hay viajes
-                            viajesArray.map((viaje) => (
-                                <Travel key={viaje.id} salida={viaje.departureCity} fechaSalida={viaje.departureDate} destino={viaje.arrivalCity} fechaDestino={viaje.returnDate}/>
+                            viajesArray.map((viaje, index) => (
+                                <Travel key={index} salida={viaje.departure_city} fechaSalida={viaje.departure_date} destino={viaje.arrival_city} fechaDestino={viaje.return_date}/>
                             ))
                         ) : (
                             <p>No hay viajes disponibles</p> // Mensaje si no hay viajes
