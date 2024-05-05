@@ -68,14 +68,17 @@ const Map = ({ ciudad, user }) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-                {loc.map((localizacion, index) => 
-                        <Marker position={[localizacion.cords.latitude, localizacion.cords.longitude]} icon={markerIcon}>
-                            <Popup>
-                                {localizacion.nombre}
-                            </Popup>
-                        </Marker>
-                    )
-                }
+            {loc.map((localizacion, index) =>
+                <Marker
+                    key={`${localizacion.cords.latitude},${localizacion.cords.longitude}`}
+                    position={[localizacion.cords.latitude, localizacion.cords.longitude]}
+                    icon={markerIcon}>
+                    <Popup>
+                        {localizacion.nombre}
+                    </Popup>
+                </Marker>
+            )
+            }
         </MapContainer>
     </div>)
 

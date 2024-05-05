@@ -4,51 +4,76 @@ import { useEffect, useState, response } from "react";
 import Map from "../map";
 import Travel from "../travel/Travel";
 
-const Social = ({user}) => {
+const Social = ({ user }) => {
 
     const [eventos, setEventos] = useState([]);
     const [ciudad, setCiudad] = useState(null);
     const [viajes, setViajes] = useState([]);
+    const viajesArray = Object.entries(viajes).map(([id, viaje]) => ({
+        id,
+        ...viaje
+    }))
 
     useEffect(() => {
-        // Verificar si el usuario está autenticado
-
-        // Si el usuario está autenticado, realizar las llamadas fetch
-        if (user) {
+        try {
             const fetchData = async () => {
-                try {
-                    if (!ciudad) {
-                        const response = await fetch("http://127.0.0.1:5000/users/" + user + "/last_travel");
-                        if (!response.ok) {
-                            throw new Error('Error al obtener la ciudad más reciente');
-                        }
-                        const data = await response.json();
-                        setCiudad(data.arrival_city);
-                    }
-
-                    if (ciudad) {
-                        const response = await fetch("http://127.0.0.1:5000/evento?ciudad=" + ciudad);
-                        if (!response.ok) {
-                            throw new Error('Error al obtener los eventos');
-                        }
-                        const data = await response.json();
-                        setEventos(data);
-                    }
-
-                    const response = await fetch("http://127.0.0.1:5000/users/" + user + "/travels");
+                if (user) {
+                    const response = await fetch(`http://127.0.0.1:5000/users/${user}/travels`);
                     if (!response.ok) {
                         throw new Error('Error al obtener los viajes');
                     }
                     const data = await response.json();
                     setViajes(data);
-                } catch (error) {
-                    console.error('Error al obtener los datos:', error);
+                } else {
+                    setViajes([])
                 }
             };
-
             fetchData();
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
         }
-    }, [user, ciudad]);
+    }, [user]);
+
+    useEffect(() => {
+        try {
+            const fetchData = async () => {
+                if (user && !ciudad) {
+                    const response = await fetch(`http://127.0.0.1:5000/users/${user}/last_travel`);
+                    if (!response.ok) {
+                        throw new Error('Error al obtener la ciudad más reciente');
+                    }
+                    const data = await response.json();
+                    setCiudad(data.arrival_city);
+                } else {
+                    setCiudad(null)
+                }
+            };
+            fetchData();
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        try {
+            const fetchData = async () => {
+                if (ciudad) {
+                    const response = await fetch(`http://127.0.0.1:5000/evento?ciudad=${ciudad}`);
+                    if (!response.ok) {
+                        throw new Error('Error al obtener los eventos');
+                    }
+                    const data = await response.json();
+                    setEventos(data);
+                } else {
+                    setEventos([])
+                }
+            };
+            fetchData();
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+        }
+    }, [ciudad]);
+
 
     // Estado para el número de página actual
     const [currentPage, setCurrentPage] = useState(1);
@@ -74,17 +99,16 @@ const Social = ({user}) => {
         }
     }
 
-    return(
+    return (
         <div className="grid grid-cols-4 gap-4">
 
             <div className="col-span-full">
                 <div className="flex flex-col">
                     <h1 className="text-blue-500 text-2xl font-bold mb-4">Viajes:</h1>
                     <div className="p-2 mb-3 flex">
-
-                        {viajes.length > 0 ? ( // Verificar si hay viajes
-                            viajes.map((viaje, index) => (
-                                <Travel key={index} salida={viaje} />
+                        {viajesArray. length > 0 ? ( // Verificar si hay viajes
+                            viajesArray.map((viaje) => (
+                                <Travel key={viaje.id} salida={viaje.departureCity} fechaSalida={viaje.departureDate} destino={viaje.arrivalCity} fechaDestino={viaje.returnDate}/>
                             ))
                         ) : (
                             <p>No hay viajes disponibles</p> // Mensaje si no hay viajes
@@ -137,8 +161,8 @@ const Social = ({user}) => {
 
             <div className="col-span-full flex justify-center items-center ">
                 <div className="rounded-md p-3 overflow-hidden shadow-lg bg-white w-3/4">
-                    <Map ciudad={ciudad} 
-                        setCiudad={setCiudad} 
+                    <Map ciudad={ciudad}
+                        setCiudad={setCiudad}
                         user={user}
                     />
                 </div>
