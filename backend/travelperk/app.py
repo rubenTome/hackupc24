@@ -11,6 +11,7 @@ import json
 databaseURL = 'https://hackudc-49b6e-default-rtdb.europe-west1.firebasedatabase.app/'
 api_key_evento = 'A4na1M8Qx37B6GOjdnFeHH2lYa9JI4UG';
 api_key_location = 'fsq3GEAn2lFtnrxrPXA2sIeYEXaja2GOZbhPQz2uPIJZ1ck='
+api_key_vuelos = 'Bearer c1Ceh5osX2do2mAjSO2iRbEwdQBS'
 
 from models.person import Person
 
@@ -123,8 +124,8 @@ def buscar_lugares_interes_endpoint():
     
     return jsonify(lugares_procesados)
 
-@app.route('/users/', methods=['POST'])
-def añadir_nuevo_viaje():
+@app.route('/viajes/<username>/añadir', methods=['POST'])
+def añadir_nuevo_viaje(username):
     data = request.get_json()
     print(data)
 
@@ -142,3 +143,57 @@ def añadir_nuevo_viaje():
         status=200,
         mimetype='application/json'
     )
+
+@app.route('/buscar_vuelos', methods=['GET'])
+def buscar_vuelos():
+    # Obtener parámetros de la solicitud
+    origen = request.args.get('origen')
+    destino = request.args.get('destino')
+    fecha_salida = request.args.get('fecha_salida')
+    fecha_retorno = request.args.get('fecha_retorno')
+    
+    # Construir la URL de la solicitud
+    url = f'https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode={origen}&destinationLocationCode={destino}&departureDate={fecha_salida}&returnDate={fecha_retorno}&currencyCode=EUR&adults=1&max=1'
+
+    # Realizar la solicitud GET
+    headers = {'Authorization': api_key_vuelos}
+    respuesta = requests.get(url, headers=headers)
+    
+    # Verificar el estado de la respuesta
+    if respuesta.status_code == 200:
+        datos_vuelos = respuesta.json()
+        return jsonify(datos_vuelos)
+    else:
+        return jsonify({"error": "Hubo un problema al buscar vuelos"}), 500
+
+@app.route('/aeropuertos_importantes', methods=['GET'])
+def aeropuertos_importantes():
+    # URL del punto final de la API de IATA para obtener los aeropuertos importantes
+    endpoint = "your/endpoint"  # Reemplaza "your/endpoint" con el punto final real de la API de IATA
+
+    # Parámetros de la solicitud (si los hay)
+    params = {
+        "param1": "value1",
+        "param2": "value2"
+    }
+
+    # Encabezados de autenticación (si es necesario)
+    headers = {
+        "Authorization": "Bearer your_access_token"  # Reemplaza "your_access_token" con tu token de acceso real
+    }
+
+    try:
+        # Realizar la solicitud GET a la API de IATA
+        response = requests.get(endpoint, params=params, headers=headers)
+
+        # Verificar el estado de la respuesta
+        if response.status_code == 200:
+            # Si la solicitud fue exitosa, devolver los datos de la respuesta en formato JSON
+            return jsonify(response.json())
+        else:
+            # Si hubo un error en la solicitud, devolver un mensaje de error con el código de estado
+            return jsonify({"error": f"Hubo un problema al obtener los aeropuertos importantes: {response.status_code}"}), response.status_code
+    except Exception as e:
+        # Si se produce una excepción, devolver un mensaje de error con la descripción del error
+        return jsonify({"error": f"Hubo un error al procesar la solicitud: {str(e)}"}), 500
+
