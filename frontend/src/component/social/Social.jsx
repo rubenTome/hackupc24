@@ -3,15 +3,20 @@ import Card from "../card/Card";
 import { useEffect, useState, response } from "react";
 import Map from "../map";
 import Travel from "../travel/Travel";
+import Match from "../match/Match";
 
 const Social = ({ user }) => {
-
+    const [matches, setMatches] = useState([]);
     const [eventos, setEventos] = useState([]);
     const [ciudad, setCiudad] = useState(null);
     const [viajes, setViajes] = useState([]);
     const viajesArray = Object.entries(viajes).map(([id, viaje]) => ({
         id,
         ...viaje
+    }))
+    const matchesArray = Object.entries(matches).map(([id, match]) => ({
+        id,
+        ...match
     }))
 
     useEffect(() => {
@@ -26,6 +31,27 @@ const Social = ({ user }) => {
                     setViajes(data);
                 } else {
                     setViajes([])
+                }
+            };
+            fetchData();
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        try {
+            const fetchData = async () => {
+                if (user) {
+                    const response = await fetch(`http://127.0.0.1:5000//users/${user}/match`);
+                    if (!response.ok) {
+                        throw new Error('Error al obtener los matches');
+                    }
+                    const data = await response.json();
+                    console.log(data)
+                    setMatches(data);
+                } else {
+                    setMatches([])
                 }
             };
             fetchData();
@@ -75,6 +101,7 @@ const Social = ({ user }) => {
     }, [ciudad]);
 
 
+
     // Estado para el número de página actual
     const [currentPage, setCurrentPage] = useState(1);
     // Cantidad de eventos por página
@@ -98,6 +125,7 @@ const Social = ({ user }) => {
             setCiudad(input.value);
         }
     }
+
 
     return (
         <div className="grid grid-cols-4 gap-4">
@@ -140,22 +168,26 @@ const Social = ({ user }) => {
                     </div>
 
                     {/* Controles de paginación */}
-                    <div className="mt-4">
-                        <button
-                            onClick={() => cambiarPagina(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className="mr-2 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
-                        >
-                            Anterior
-                        </button>
-                        <button
-                            onClick={() => cambiarPagina(currentPage + 1)}
-                            disabled={indiceUltimoEvento >= eventos.length}
-                            className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
-                        >
-                            Siguiente
-                        </button>
-                    </div>
+                    {eventos == [] ? <div /> :
+                        <div className="mt-4">
+                            <button
+                                onClick={() => cambiarPagina(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="mr-2 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+                            >
+                                Anterior
+                            </button>
+                            <button
+                                onClick={() => cambiarPagina(currentPage + 1)}
+                                disabled={indiceUltimoEvento >= eventos.length}
+                                className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+                            >
+                                Siguiente
+                            </button>
+                        </div>
+                        
+                    }
+                    
                 </div>
             </div>
 
@@ -167,6 +199,14 @@ const Social = ({ user }) => {
                     />
                 </div>
             </div>
+
+            <div className="bg-white shadow-md rounded-lg p-6">
+                <h2 className="text-xl font-semibold mb-4">Viajeros Similares</h2>
+                {matchesArray.map((evento, index) =>(
+                    <Match key={index} name={evento.name} />
+                ))}
+            </div>
+
         </div>
 
 

@@ -18,14 +18,6 @@ const Map = ({ ciudad, user }) => {
     const [loc, setLoc] = useState([]);
     const [position, setPosition] = useState([0, 0]);
 
-    // useEffect(() => {
-    //     console.log(loc)
-    //     if (loc.length != 0 && loc[0].cords !== undefined) {
-    //         console.log([loc[0].cords.latitude, loc[0].cords.longitude])
-    //         setPosition([loc[0].cords.latitude, loc[0].cords.longitude]);
-    //     }
-    // }, [loc])
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,8 +54,8 @@ const Map = ({ ciudad, user }) => {
 
 
     const example = (<div className="w-full h-96 mb-9">
-        <h1 className="text-blue-500 text-2xl font-bold">{position}</h1>
-        <MapContainer center={position} zoom={13} scrollWheelZoom={false} 
+        <h1 className="text-blue-500 text-2xl font-bold">Map</h1>
+        <MapContainer center={position} zoom={1} scrollWheelZoom={true} 
         className="w-full h-full"
         ref={position}>
             <TileLayer
